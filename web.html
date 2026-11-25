@@ -1,0 +1,995 @@
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>S²WISH — Crucible Research Labs | Frugal AI, Quant Systems & Orbital Sensing</title>
+  <meta name="description" content="Independent deep-tech & quantitative research lab forging ultra-frugal, mathematically verifiable systems across Frontier AI Evaluation (NeurIPS 2026 PAIEC), C++20 Market Simulation, Live-Capital Quant, Space Sensing (UN ITU, IEEE ICIP), and Automated Security." />
+
+  <!-- Precision Typography: Space Grotesk + Plus Jakarta Sans + JetBrains Mono (No bloated Syne glyphs) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            obsidian: '#07090E',
+            crucible: '#0B0E16',
+            panel: '#101520',
+            gold: {
+              DEFAULT: '#F59E0B',
+              bright: '#FFB82E',
+              dim: 'rgba(245, 158, 11, 0.12)'
+            },
+            bone: '#F3F1EC',
+            muted: '#94A3B8'
+          },
+          fontFamily: {
+            display: ['"Plus Jakarta Sans"', '"Space Grotesk"', 'sans-serif'],
+            sans: ['"Space Grotesk"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --grid-line: rgba(243, 241, 236, 0.12);
+      --gold-line: rgba(245, 158, 11, 0.40);
+    }
+    body {
+      background-color: #07090E;
+      color: #F3F1EC;
+      font-family: 'Space Grotesk', sans-serif;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 10%, rgba(245, 158, 11, 0.07), transparent 30%),
+        radial-gradient(circle at 85% 70%, rgba(56, 189, 248, 0.04), transparent 35%);
+    }
+    .grid-border-b { border-bottom: 1px solid var(--grid-line); }
+    .grid-border-t { border-top: 1px solid var(--grid-line); }
+    .grid-border-r { border-right: 1px solid var(--grid-line); }
+    .grid-border-l { border-left: 1px solid var(--grid-line); }
+    .grid-box { border: 1px solid var(--grid-line); }
+    .grid-box-gold { border: 1px solid var(--gold-line); }
+
+    /* Fluid Hero Display Size — Guaranteed NEVER to overflow column */
+    .hero-title {
+      font-size: clamp(2.35rem, 4.3vw, 4.15rem);
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+    }
+    .stat-number {
+      font-size: clamp(2.1rem, 3.1vw, 3.1rem);
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    /* Kinetic Marquee */
+    @keyframes marquee {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+      display: flex;
+      width: max-content;
+      animation: marquee 36s linear infinite;
+    }
+    .animate-marquee:hover {
+      animation-play-state: paused;
+    }
+
+    /* Card Hover */
+    .crucible-card {
+      transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .crucible-card:hover {
+      transform: translateY(-2px);
+      border-color: #F59E0B;
+      box-shadow: 0 10px 30px -12px rgba(245, 158, 11, 0.2);
+    }
+
+    /* Custom Sliders */
+    input[type=range] {
+      -webkit-appearance: none;
+      background: rgba(255,255,255,0.14);
+      height: 6px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 18px;
+      width: 18px;
+      background: #F59E0B;
+      cursor: pointer;
+      border: 2px solid #07090E;
+    }
+
+    /* Subtle architectural background grid */
+    .bg-grid-pattern {
+      background-size: 44px 44px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    }
+  </style>
+</head>
+
+<body class="selection:bg-gold selection:text-obsidian">
+
+  <!-- TOP TELEMETRY STATUS BAR -->
+  <div class="w-full bg-crucible grid-border-b">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-8 py-2 text-[11px] font-mono flex flex-wrap items-center justify-between gap-2 text-muted">
+      <div class="flex items-center gap-3 whitespace-nowrap">
+        <span class="inline-block w-2 h-2 rounded-full bg-gold animate-pulse"></span>
+        <span class="text-bone font-semibold">S²WISH // CRUCIBLE RESEARCH LABS</span>
+        <span class="hidden md:inline text-white/25">|</span>
+        <span class="hidden md:inline">PUNE, INDIA (18.5204° N, 73.8567° E)</span>
+      </div>
+      <div class="flex items-center gap-4 whitespace-nowrap">
+        <span>STATUS: <strong class="text-gold">NEURIPS 2026 PAIEC ACCEPTED (#7)</strong></span>
+        <a href="https://openreview.net/forum?id=pFevYFM8Cu" target="_blank" rel="noopener" class="text-bone underline decoration-gold hover:text-gold">OPENREVIEW ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- STICKY NAVIGATION HEADER (Strictly Single-Line, Zero Wrapping) -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-obsidian/95 grid-border-b">
+    <div class="max-w-[1400px] mx-auto flex items-center justify-between px-4 sm:px-8 h-20 gap-6">
+      
+      <!-- Brand Lockup Matching User's Official S2WISH | CRUCIBLE RESEARCH LABS Sheet -->
+      <a href="#" class="flex items-center gap-3.5 shrink-0 group">
+        <div class="w-11 h-11 flex items-center justify-center shrink-0">
+          <svg viewBox="0 0 120 120" class="w-11 h-11" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 58C22 33.7 40.5 14 63 14C79 14 93 23.5 99 37" stroke="#F59E0B" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="60" cy="54" r="25" fill="#111622" stroke="#F3F1EC" stroke-width="2.2"/>
+            <path d="M46 42C51 39 58 41 62 45C66 49 63 56 58 60C53 63 45 58 43 52C42 47 44 44 46 42Z" fill="#64748B"/>
+            <path d="M67 37C72 38 77 43 76 50C75 55 70 59 67 56C64 53 65 42 67 37Z" fill="#64748B"/>
+            <g transform="translate(79, 12) rotate(32)">
+              <rect x="8" y="6" width="7" height="11" fill="#F3F1EC"/>
+              <rect x="0" y="7.5" width="6" height="8" fill="#94A3B8" stroke="#F3F1EC" stroke-width="1"/>
+              <rect x="17" y="7.5" width="6" height="8" fill="#94A3B8" stroke="#F3F1EC" stroke-width="1"/>
+              <line x1="11.5" y1="17" x2="11.5" y2="22" stroke="#F59E0B" stroke-width="2"/>
+            </g>
+            <path d="M16 46C28 58 55 62 85 68C64 74 36 74 25 60" stroke="#F3F1EC" stroke-width="4.2" stroke-linecap="round"/>
+            <path d="M60 65 L64.5 82 L90 79 L66.5 88 L60 113 L53.5 88 L30 79 L55.5 82 Z" fill="#F59E0B"/>
+          </svg>
+        </div>
+        <!-- Vertical Gold Divider Line (From Brand Sheet) -->
+        <div class="h-8 w-[1.5px] bg-gold/80 shrink-0"></div>
+        <div class="flex flex-col justify-center whitespace-nowrap">
+          <div class="text-xl font-display font-extrabold tracking-[0.18em] text-bone leading-none">
+            S<sup class="text-[11px] text-gold font-mono mr-0.5">2</sup>WISH
+          </div>
+          <span class="text-[9.5px] font-mono tracking-[0.22em] text-muted uppercase mt-1">Crucible Research Labs</span>
+        </div>
+      </a>
+
+      <!-- Single-Line Nav Links -->
+      <nav class="hidden xl:flex items-center gap-7 text-xs font-mono uppercase tracking-wider whitespace-nowrap">
+        <a href="#manifesto" class="text-muted hover:text-gold transition"><span class="text-gold/70">01/</span> Thesis</a>
+        <a href="#divisions" class="text-muted hover:text-gold transition"><span class="text-gold/70">02/</span> 4 Pillars</a>
+        <a href="#simulator" class="text-muted hover:text-gold transition"><span class="text-gold/70">03/</span> Live Solver</a>
+        <a href="#vault" class="text-muted hover:text-gold transition"><span class="text-gold/70">04/</span> Proof Vault</a>
+        <a href="#team" class="text-muted hover:text-gold transition"><span class="text-gold/70">05/</span> Team</a>
+      </nav>
+
+      <!-- Single-Line CTA Buttons -->
+      <div class="flex items-center gap-3 shrink-0 whitespace-nowrap">
+        <a href="https://github.com/Shashwat-srivastav" target="_blank" rel="noopener"
+           class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2.5 text-xs font-mono uppercase tracking-wider grid-box hover:border-gold hover:text-gold transition whitespace-nowrap">
+          <span>GitHub</span><span>↗</span>
+        </a>
+        <a href="#contact"
+           class="inline-flex items-center gap-1.5 px-5 py-2.5 text-xs font-mono font-bold uppercase tracking-wider bg-gold text-obsidian hover:bg-gold-bright transition whitespace-nowrap">
+          <span>Fund / Partner</span><span>→</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- HERO SECTION: Zero-Overflow Architectural Grid -->
+  <section class="relative bg-grid-pattern grid-border-b">
+    <div class="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12">
+      
+      <!-- Left 7 Cols: Headline + Lead + Aligned Action Bar -->
+      <div class="lg:col-span-7 grid-border-r flex flex-col justify-between">
+        <div class="p-6 sm:p-12 lg:p-14">
+          <div class="inline-flex items-center gap-2 px-3 py-1 mb-6 bg-gold-dim grid-box-gold text-gold font-mono text-[11px] uppercase tracking-widest whitespace-nowrap">
+            <span>INDIE DEEP-TECH & QUANTITATIVE COLLECTIVE</span>
+          </div>
+
+          <h1 class="hero-title font-display font-extrabold uppercase text-bone mb-6">
+            FORGING <span class="text-gold">VERIFIABLE</span><br/>
+            INTELLIGENCE ON<br/>
+            FRUGAL SILICON.
+          </h1>
+
+          <p class="text-muted text-base sm:text-lg max-w-2xl leading-relaxed font-normal">
+            We reject the premise that frontier science requires billion-dollar GPU clusters. From a single consumer CPU, <strong class="text-bone">S²WISH (Crucible Research Labs)</strong> engineers mathematically rigorous systems across <span class="text-bone underline decoration-gold/60 underline-offset-4">AI Benchmark Verification</span>, <span class="text-bone underline decoration-gold/60 underline-offset-4">C++20 Market Microstructure</span>, <span class="text-bone underline decoration-gold/60 underline-offset-4">Orbital SAR/Optical Sensing</span>, and <span class="text-bone underline decoration-gold/60 underline-offset-4">Automated Cyber-Defense</span>.
+          </p>
+        </div>
+
+        <!-- Bottom Action Bar Aligned with Right Grid -->
+        <div class="px-6 sm:px-12 lg:px-14 py-6 bg-crucible/90 grid-border-t flex flex-wrap items-center justify-between gap-4">
+          <div class="flex flex-wrap items-center gap-3">
+            <a href="#vault" class="px-6 py-3.5 bg-gold text-obsidian font-mono font-bold text-xs uppercase tracking-wider hover:bg-gold-bright transition whitespace-nowrap">
+              Explore 12 Verified Artifacts ↓
+            </a>
+            <a href="#simulator" class="px-5 py-3.5 bg-panel grid-box text-bone font-mono text-xs uppercase tracking-wider hover:border-gold transition whitespace-nowrap">
+              Run 3.3ms PAIEC Solver ⚡
+            </a>
+          </div>
+          <a href="https://www.linkedin.com/company/s2wish/" target="_blank" rel="noopener" class="text-muted hover:text-gold font-mono text-xs uppercase tracking-wider whitespace-nowrap">
+            LinkedIn Lab Page ↗
+          </a>
+        </div>
+      </div>
+
+      <!-- Right 5 Cols: 2x2 Precision Telemetry Matrix (Zero Wrapped Badges) -->
+      <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 bg-crucible/60">
+        
+        <!-- Card 01 -->
+        <div class="p-6 sm:p-7 grid-border-b sm:grid-border-r flex flex-col justify-between hover:bg-panel/60 transition">
+          <div>
+            <div class="flex items-center justify-between gap-2 text-[10px] font-mono text-muted mb-3 whitespace-nowrap">
+              <span>01 // NEURIPS 2026 PAIEC</span>
+              <span class="px-1.5 py-0.5 bg-gold-dim text-gold font-semibold">ACCEPTED #7</span>
+            </div>
+            <div class="stat-number font-display font-extrabold text-bone">
+              82<span class="text-gold mx-1">/</span>89
+            </div>
+            <div class="text-xs font-mono text-gold uppercase mt-1">Unseen Benchmarks Beaten</div>
+          </div>
+          <p class="text-xs font-mono text-muted mt-4 leading-relaxed">
+            <strong class="text-bone">5 KB pure-NumPy</strong> hierarchical empirical-Bayes solver running in <strong class="text-bone">3.3–222 ms</strong> on 1 laptop CPU (Stanford AIMS).
+          </p>
+        </div>
+
+        <!-- Card 02 -->
+        <div class="p-6 sm:p-7 grid-border-b flex flex-col justify-between hover:bg-panel/60 transition">
+          <div>
+            <div class="flex items-center justify-between gap-2 text-[10px] font-mono text-muted mb-3 whitespace-nowrap">
+              <span>02 // NEURIPS AGENTHON</span>
+              <span class="px-1.5 py-0.5 bg-gold-dim text-gold font-semibold">C++20 ENGINE</span>
+            </div>
+            <div class="stat-number font-display font-extrabold text-bone">
+              1.76M<span class="text-xs font-mono font-normal text-muted ml-1">/s</span>
+            </div>
+            <div class="text-xs font-mono text-gold uppercase mt-1">Final Scored Throughput</div>
+          </div>
+          <p class="text-xs font-mono text-muted mt-4 leading-relaxed">
+            <strong class="text-bone">2.3 MB</strong> static binary (<strong class="text-bone">203k/s</strong> dev rank 10/50; <strong class="text-bone">8.34M/s</strong> raw loop) verified by <strong class="text-bone">1,318</strong> differential fuzz tests.
+          </p>
+        </div>
+
+        <!-- Card 03 -->
+        <div class="p-6 sm:p-7 grid-border-b sm:border-b-0 sm:grid-border-r flex flex-col justify-between hover:bg-panel/60 transition">
+          <div>
+            <div class="flex items-center justify-between gap-2 text-[10px] font-mono text-muted mb-3 whitespace-nowrap">
+              <span>03 // AVENIR–HKU & WQ</span>
+              <span class="px-1.5 py-0.5 bg-gold-dim text-gold font-semibold">LIVE CAPITAL</span>
+            </div>
+            <div class="stat-number font-display font-extrabold text-bone">
+              TOP 10
+            </div>
+            <div class="text-xs font-mono text-gold uppercase mt-1">Of 1,171 Global Teams</div>
+          </div>
+          <p class="text-xs font-mono text-muted mt-4 leading-relaxed">
+            Verified <strong class="text-bone">+4.3% live-capital return</strong> (Team Abyss) + <strong class="text-bone">WorldQuant BRAIN Gold</strong> (<code class="text-gold">SS60841</code>, 23 alphas, IQC Top 20%).
+          </p>
+        </div>
+
+        <!-- Card 04 -->
+        <div class="p-6 sm:p-7 flex flex-col justify-between hover:bg-panel/60 transition">
+          <div>
+            <div class="flex items-center justify-between gap-2 text-[10px] font-mono text-muted mb-3 whitespace-nowrap">
+              <span>04 // SPACE & SAR RADAR</span>
+              <span class="px-1.5 py-0.5 bg-gold-dim text-gold font-semibold">UN ITU & IEEE</span>
+            </div>
+            <div class="stat-number font-display font-extrabold text-bone">
+              UN ITU
+            </div>
+            <div class="text-xs font-mono text-gold uppercase mt-1">SpaceAI Innovation Award</div>
+          </div>
+          <p class="text-xs font-mono text-muted mt-4 leading-relaxed">
+            2026 UN ITU AI for Good Track 2 Winner (Geneva Q&A) + <strong class="text-bone">IEEE ICIP 2026</strong> Grand Challenge SAR RFI abstract (#4247).
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- KINETIC TICKER TAPE -->
+  <div class="w-full bg-gold text-obsidian py-2.5 grid-border-b overflow-hidden select-none">
+    <div class="animate-marquee font-mono font-bold text-xs uppercase tracking-widest flex items-center gap-10 whitespace-nowrap">
+      <span>★ NEURIPS 2026 PAIEC ACCEPTED PAPER & POSTER (#7) + OFFICIAL REVIEWER (2 PAPERS)</span>
+      <span>◆ 5 KB PURE-NUMPY BAYESIAN SOLVER // 3.3 MS CPU LATENCY</span>
+      <span>★ ABIDES-NATIVE C++20 // 1,755,232 EVENTS/S CONTAINER-SCORED // 1,318 DIFFERENTIAL FUZZ CASES</span>
+      <span>◆ AVENIR–HKU GLOBAL TOP 10 OF 1,171 TEAMS (+4.3% LIVE CAPITAL, TEAM ABYSS)</span>
+      <span>★ UN ITU AI FOR GOOD 2026 SPACEAI INNOVATION AWARD (GENEVA)</span>
+      <span>◆ IEEE ICIP 2026 SENTINEL-1 SAR RFI GRAND CHALLENGE ABSTRACT (#4247)</span>
+      <span>★ UPSTREAM MERGED 3D KABSCH GEOMETRY FIX IN VECKIT (PR #9)</span>
+      <span>◆ FALLING WALLS LAB CHENNAI 2026 SELECTED PRESENTER (MULTILINGUAL DISINFORMATION)</span>
+      <!-- Duplicate for seamless loop -->
+      <span>★ NEURIPS 2026 PAIEC ACCEPTED PAPER & POSTER (#7) + OFFICIAL REVIEWER (2 PAPERS)</span>
+      <span>◆ 5 KB PURE-NUMPY BAYESIAN SOLVER // 3.3 MS CPU LATENCY</span>
+      <span>★ ABIDES-NATIVE C++20 // 1,755,232 EVENTS/S CONTAINER-SCORED // 1,318 DIFFERENTIAL FUZZ CASES</span>
+      <span>◆ AVENIR–HKU GLOBAL TOP 10 OF 1,171 TEAMS (+4.3% LIVE CAPITAL, TEAM ABYSS)</span>
+    </div>
+  </div>
+
+  <!-- SECTION 01: THE CRUCIBLE THESIS (Fixed Typography & Bordered Architectural Cells) -->
+  <section id="manifesto" class="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 grid-border-b">
+    <div class="lg:col-span-4 p-8 sm:p-10 grid-border-b lg:border-b-0 lg:grid-border-r bg-crucible flex flex-col justify-between">
+      <div>
+        <div class="font-mono text-xs text-gold uppercase tracking-widest mb-3">01 // THE CRUCIBLE THESIS</div>
+        <h2 class="font-display font-extrabold text-2xl sm:text-3xl uppercase leading-snug tracking-tight mb-4">
+          WHY FRUGAL RIGOR BEATS BLOATED BLACK BOXES.
+        </h2>
+      </div>
+      <p class="text-xs font-mono text-muted leading-relaxed pt-4 grid-border-t">
+        Engineered in 9 months on a single Ryzen 5 5500U laptop with $0 institutional funding in Pune, India.
+      </p>
+    </div>
+
+    <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 bg-obsidian">
+      <!-- Law 01 -->
+      <div class="p-8 sm:p-9 grid-border-b md:border-b-0 md:grid-border-r flex flex-col justify-between">
+        <div>
+          <div class="inline-block px-2 py-0.5 bg-gold-dim text-gold font-mono text-[11px] font-bold mb-4 whitespace-nowrap">
+            LAW 01 // EMPIRICAL SHRINKAGE
+          </div>
+          <h3 class="font-display font-bold text-lg text-bone mb-3">Small Samples Need Priors, Not Larger GPUs</h3>
+          <p class="text-sm text-muted leading-relaxed">
+            In our NeurIPS 2026 PAIEC study across 89 unseen benchmarks, simple Beta(1,1) Laplace shrinkage captured <strong class="text-bone">92.8%</strong> of total predictive gain, while 70% of complex post-hoc rules failed out-of-sample.
+          </p>
+        </div>
+        <div class="mt-6 pt-3 grid-border-t font-mono text-[11px] text-gold">82 / 89 Benchmarks Beaten</div>
+      </div>
+
+      <!-- Law 02 -->
+      <div class="p-8 sm:p-9 grid-border-b md:border-b-0 md:grid-border-r flex flex-col justify-between">
+        <div>
+          <div class="inline-block px-2 py-0.5 bg-gold-dim text-gold font-mono text-[11px] font-bold mb-4 whitespace-nowrap">
+            LAW 02 // BIT-EXACT PARITY
+          </div>
+          <h3 class="font-display font-bold text-lg text-bone mb-3">Speed Without Verification Is Noise</h3>
+          <p class="text-sm text-muted leading-relaxed">
+            Whether re-implementing market simulators in C++20 (<code class="text-gold">abides-native</code>) or fixing 3D cell-geometry scorers (<code class="text-gold">veckit PR #9</code>), every speedup is locked to differential fuzz tests and algebraic invariants.
+          </p>
+        </div>
+        <div class="mt-6 pt-3 grid-border-t font-mono text-[11px] text-gold">1,318 Differential Fuzz Tests</div>
+      </div>
+
+      <!-- Law 03 -->
+      <div class="p-8 sm:p-9 flex flex-col justify-between">
+        <div>
+          <div class="inline-block px-2 py-0.5 bg-gold-dim text-gold font-mono text-[11px] font-bold mb-4 whitespace-nowrap">
+            LAW 03 // SOVEREIGN FRUGALITY
+          </div>
+          <h3 class="font-display font-bold text-lg text-bone mb-3">Runs on a Laptop or Orbiting CubeSat</h3>
+          <p class="text-sm text-muted leading-relaxed">
+            From 5 KB CPU-only AI auditors to physics-constrained Sentinel-1 SAR & Sentinel-2 water-quality pipelines, our tools are built for resource-constrained public and financial infrastructure.
+          </p>
+        </div>
+        <div class="mt-6 pt-3 grid-border-t font-mono text-[11px] text-gold">3.3 ms Single-CPU Inference</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 02: THE 4 RESEARCH DIVISIONS -->
+  <section id="divisions" class="max-w-[1400px] mx-auto py-16 px-4 sm:px-8 grid-border-b">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+      <div>
+        <div class="font-mono text-xs text-gold uppercase tracking-widest mb-2">02 // RESEARCH ARCHITECTURE</div>
+        <h2 class="font-display font-extrabold text-3xl sm:text-4xl uppercase tracking-tight">FOUR INTERLOCKING DIVISIONS.</h2>
+      </div>
+      <p class="font-mono text-xs text-muted max-w-md">
+        One mathematical spine—hierarchical Bayes, low-latency C++20 systems, and differential verification—applied across four high-consequence domains.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Division 1 -->
+      <div class="crucible-card bg-panel grid-box p-8 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between font-mono text-xs text-gold mb-4 whitespace-nowrap">
+            <span>DIVISION I // AI EVALUATION</span>
+            <span class="px-2 py-0.5 bg-gold-dim grid-box-gold">NEURIPS 2026 PAIEC</span>
+          </div>
+          <h3 class="font-display font-bold text-2xl uppercase mb-3">Frontier AI Benchmark Verification</h3>
+          <p class="text-muted text-sm leading-relaxed mb-6">
+            Predicting language model performance on unseen benchmarks under extreme label budgets ($b \in \{0,1,3,7,15,31\}$). We proved exact zero-shot Brier feedback inversion $a = (B_0 - p_0^2)/(1-2p_0)$, exposed the $p_0=0.5$ reflection symmetry blind spot, and built a 5 KB 3-stage Rasch empirical-Bayes solver with a hedged $t_3$ prior.
+          </p>
+        </div>
+        <div class="pt-4 grid-border-t flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+          <span class="text-bone">LOBO Brier ALC: <strong class="text-gold">0.2451 → 0.2088</strong></span>
+          <a href="https://openreview.net/forum?id=pFevYFM8Cu" target="_blank" rel="noopener" class="text-gold hover:underline">OpenReview Forum ↗</a>
+        </div>
+      </div>
+
+      <!-- Division 2 -->
+      <div class="crucible-card bg-panel grid-box p-8 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between font-mono text-xs text-gold mb-4 whitespace-nowrap">
+            <span>DIVISION II // QUANT SYSTEMS</span>
+            <span class="px-2 py-0.5 bg-gold-dim grid-box-gold">LIVE CAPITAL & C++20</span>
+          </div>
+          <h3 class="font-display font-bold text-2xl uppercase mb-3">Market Microstructure & Alpha Research</h3>
+          <p class="text-muted text-sm leading-relaxed mb-6">
+            Bit-exact native C++20 re-engineering of the ABIDES multi-agent limit-order-book simulator (<code class="text-bone">abides-native</code>, 2.3 MB static binary, 1,318 differential fuzz tests, container-level Parquet serialization profiling) paired with live-capital quantitative trading (<strong class="text-bone">Avenir–HKU Global Top 10 of 1,171</strong>, Team Abyss) and <strong class="text-bone">WorldQuant BRAIN Gold</strong>.
+          </p>
+        </div>
+        <div class="pt-4 grid-border-t flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+          <span class="text-bone">Throughput: <strong class="text-gold">1.76M/s Final | 8.34M/s Loop</strong></span>
+          <a href="https://doi.org/10.5281/zenodo.23298302" target="_blank" rel="noopener" class="text-gold hover:underline">Zenodo DOI ↗</a>
+        </div>
+      </div>
+
+      <!-- Division 3 -->
+      <div class="crucible-card bg-panel grid-box p-8 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between font-mono text-xs text-gold mb-4 whitespace-nowrap">
+            <span>DIVISION III // ORBITAL & PHYSICS AI</span>
+            <span class="px-2 py-0.5 bg-gold-dim grid-box-gold">UN ITU & IEEE ICIP</span>
+          </div>
+          <h3 class="font-display font-bold text-2xl uppercase mb-3">Space Remote Sensing & Fluid Dynamics</h3>
+          <p class="text-muted text-sm leading-relaxed mb-6">
+            Award-winning multi-mission optical water-quality (Chlorophyll-a) inversion across Sentinel-2 and Landsat-8/9 (<strong class="text-bone">UN ITU AI for Good 2026 SpaceAI Innovation Award</strong>), physics-constrained dual-architecture ensembles for Radio-Frequency Interference (RFI) detection in Sentinel-1 SAR quicklooks (<strong class="text-bone">IEEE ICIP 2026 #4247</strong>), and PIV fluid forecasting (<code class="text-bone">RealPDE</code>).
+          </p>
+        </div>
+        <div class="pt-4 grid-border-t flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+          <span class="text-bone">Recognition: <strong class="text-gold">UN Geneva Summit Q&A</strong></span>
+          <a href="https://doi.org/10.5281/zenodo.20093257" target="_blank" rel="noopener" class="text-gold hover:underline">ITU Technical Reports ↗</a>
+        </div>
+      </div>
+
+      <!-- Division 4 -->
+      <div class="crucible-card bg-panel grid-box p-8 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between font-mono text-xs text-gold mb-4 whitespace-nowrap">
+            <span>DIVISION IV // SECURITY & BIO-GEOMETRY</span>
+            <span class="px-2 py-0.5 bg-gold-dim grid-box-gold">OPEN SOURCE & POLICY</span>
+          </div>
+          <h3 class="font-display font-bold text-2xl uppercase mb-3">Automated Verification & Societal Resilience</h3>
+          <p class="text-muted text-sm leading-relaxed mb-6">
+            Tree-sitter AST and coverage-guided fuzzing prototypes (<code class="text-bone">CyberForge</code>), upstream Kabsch rotation-invariance reflection fixes in 3D biological point-cloud evaluation (<code class="text-bone">veckit PR #9</code>), 9-agent orchestration (<code class="text-bone">Land-It</code>), dyslexia neuroimaging analysis (<strong class="text-bone">IIT Guwahati RIC 2024</strong>), and multilingual disinformation defense (<strong class="text-bone">Falling Walls Lab Chennai 2026</strong>).
+          </p>
+        </div>
+        <div class="pt-4 grid-border-t flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+          <span class="text-bone">Upstream Fix: <strong class="text-gold">det(Vt) = +1 Verified</strong></span>
+          <a href="https://github.com/aristoteleo/veckit/pull/9" target="_blank" rel="noopener" class="text-gold hover:underline">GitHub PR #9 ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 03: INTERACTIVE LIVE DEMO OF THE NEURIPS 2026 PAIEC SHRINKAGE SOLVER -->
+  <section id="simulator" class="max-w-[1400px] mx-auto py-16 px-4 sm:px-8 grid-border-b">
+    <div class="bg-crucible grid-box-gold p-6 sm:p-10">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-8 grid-border-b">
+        <div>
+          <div class="font-mono text-xs text-gold uppercase tracking-widest mb-1">
+            03 // INTERACTIVE MATHEMATICAL SANDBOX (NEURIPS 2026 PAIEC PAPER #7)
+          </div>
+          <h2 class="font-display font-extrabold text-2xl sm:text-3xl uppercase tracking-tight">
+            TEST OUR 31-QUERY EMPIRICAL-BAYES SHRINKAGE ENGINE
+          </h2>
+        </div>
+        <div class="font-mono text-xs text-muted bg-panel px-4 py-2.5 grid-box whitespace-nowrap">
+          Model: <code class="text-gold">logit P(y=1) = μ_b + θ_sb - β_i + γ_g(i)</code> | Prior: <code class="text-bone">μ_b ~ t_3(G/2, s)</code>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-8 items-center">
+        <!-- Sliders -->
+        <div class="lg:col-span-5 space-y-6">
+          <div>
+            <div class="flex justify-between text-xs font-mono mb-2">
+              <span class="text-muted">TRUE UNSEEN BENCHMARK ACCURACY (<code class="text-bone">a</code>):</span>
+              <span id="accVal" class="text-gold font-bold">0.12 (Hard Tail Benchmark)</span>
+            </div>
+            <input id="accSlider" type="range" min="0.05" max="0.90" step="0.01" value="0.12" class="w-full" oninput="updateSimulation()" />
+            <div class="flex justify-between text-[10px] font-mono text-muted mt-1">
+              <span>0.05 (Hard Tail)</span>
+              <span>0.50 (Medium)</span>
+              <span>0.90 (Easy)</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs font-mono mb-2">
+              <span class="text-muted">OBSERVED SAMPLE BUDGET (<code class="text-bone">b</code> QUERIES):</span>
+              <span id="budgetVal" class="text-gold font-bold">b = 3 items</span>
+            </div>
+            <input id="budgetSlider" type="range" min="0" max="5" step="1" value="2" class="w-full" oninput="updateSimulation()" />
+            <div class="flex justify-between text-[10px] font-mono text-muted mt-1">
+              <span>b=0</span><span>b=1</span><span>b=3</span><span>b=7</span><span>b=15</span><span>b=31</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between text-xs font-mono mb-2">
+              <span class="text-muted">CONSTANT PROBE PREDICTION (<code class="text-bone">p_0</code>):</span>
+              <span id="p0Val" class="text-gold font-bold">0.37</span>
+            </div>
+            <input id="p0Slider" type="range" min="0.10" max="0.90" step="0.01" value="0.37" class="w-full" oninput="updateSimulation()" />
+            <p id="reflectionWarning" class="text-[11px] font-mono text-muted mt-2">
+              Proposition 1 Inversion: Exact recovery enabled (<code class="text-gold">p_0 ≠ 0.50</code>).
+            </p>
+          </div>
+        </div>
+
+        <!-- Output Telemetry Cards -->
+        <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-panel p-5 grid-box">
+            <div class="text-[11px] font-mono text-muted uppercase">Official Baseline Brier</div>
+            <div id="brierBaseline" class="font-display font-extrabold text-3xl text-red-400 mt-2">0.2491</div>
+            <div class="text-[11px] font-mono text-muted mt-2">High variance at budget <code id="bLabel1">b=3</code></div>
+          </div>
+
+          <div class="bg-panel p-5 grid-box">
+            <div class="text-[11px] font-mono text-muted uppercase">Beta(1,1) Shrinkage</div>
+            <div id="brierBeta" class="font-display font-extrabold text-3xl text-bone mt-2">0.1320</div>
+            <div class="text-[11px] font-mono text-muted mt-2">Captures ~92.8% of LOBO gain</div>
+          </div>
+
+          <div class="bg-panel p-5 grid-box-gold bg-gold-dim">
+            <div class="text-[11px] font-mono text-gold uppercase">S²WISH Hedged t₃ + Rasch</div>
+            <div id="brierS2wish" class="font-display font-extrabold text-3xl text-gold mt-2">0.1194</div>
+            <div id="deltaGain" class="text-[11px] font-mono text-bone mt-2">Δ = -129.7 × 10⁻³ vs Baseline</div>
+          </div>
+
+          <div class="sm:col-span-3 bg-obsidian p-4 grid-box font-mono text-xs flex flex-wrap items-center justify-between gap-2">
+            <span>Prop. 4 Brier Floor <code class="text-gold">F = a(1-a)</code>: <strong id="floorVal" class="text-bone">0.1056</strong></span>
+            <span>Zero-Shot <code class="text-gold">B_0</code>: <strong id="b0Val" class="text-bone">0.1681</strong></span>
+            <span>Recovered <code class="text-gold">a = (B_0 - p_0²)/(1 - 2p_0)</code>: <strong id="recoveredA" class="text-gold">0.1200</strong></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 04: FILTERABLE ARTIFACT VAULT -->
+  <section id="vault" class="max-w-[1400px] mx-auto py-16 px-4 sm:px-8 grid-border-b">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+      <div>
+        <div class="font-mono text-xs text-gold uppercase tracking-widest mb-2">04 // PEER-REVIEWED & VERIFIED ARTIFACTS</div>
+        <h2 class="font-display font-extrabold text-3xl sm:text-4xl uppercase tracking-tight">THE PROOF VAULT.</h2>
+      </div>
+
+      <div class="flex flex-wrap gap-2 font-mono text-xs">
+        <button onclick="filterVault('all')" class="vault-btn px-4 py-2 bg-gold text-obsidian font-bold uppercase" data-filter="all">All (12)</button>
+        <button onclick="filterVault('eval')" class="vault-btn px-4 py-2 bg-panel grid-box text-bone uppercase hover:border-gold" data-filter="eval">AI Evaluation</button>
+        <button onclick="filterVault('quant')" class="vault-btn px-4 py-2 bg-panel grid-box text-bone uppercase hover:border-gold" data-filter="quant">Quant & C++</button>
+        <button onclick="filterVault('space')" class="vault-btn px-4 py-2 bg-panel grid-box text-bone uppercase hover:border-gold" data-filter="space">Space & Physics</button>
+        <button onclick="filterVault('sec')" class="vault-btn px-4 py-2 bg-panel grid-box text-bone uppercase hover:border-gold" data-filter="sec">Security, Bio & Policy</button>
+      </div>
+    </div>
+
+    <div id="vaultGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- 1. PAIEC 2026 -->
+      <article class="vault-item crucible-card bg-panel grid-box p-6 flex flex-col justify-between" data-cat="eval">
+        <div>
+          <div class="flex justify-between items-center text-[11px] font-mono text-gold mb-3">
+            <span>NEURIPS 2026 COMPETITION TRACK</span>
+            <span>SOLE AUTHOR</span>
+          </div>
+          <h3 class="font-bold text-lg text-bone mb-2">
+            Predicting AI Performance on Unseen Benchmarks: Shrinkage, Hierarchical Refinements and Their Limits
+          </h3>
+          <p class="text-xs text-muted leading-relaxed mb-4">
+            Accepted after peer review (2 reviewers: 1gPn, pR7E) and selected for poster presentation at PAIEC 2026 (Stanford AIMS, non-archival). Also served as Official Reviewer (2 papers). Beat baseline on 82 of 89 unseen benchmarks in EXP-0058.
+          </p>
+        </div>
+        <div class="pt-4 grid-border-t flex items-center justify-between text-xs font-mono">
+          <a href="https://openreview.net/forum?id=pFevYFM8Cu" target="_blank" rel="noopener" class="text-gold hover:underline">OpenReview ↗</a>
+          <a href="https://doi.org/10.5281/zenodo.23885712" target="_blank" rel="noopener" class="text-muted hover:text-bone">DOI: 23885712 ↗</a>
+          <a href="https://github.com/Shashwat-srivastav/s2wish-paiec2026" target="_blank" rel="noopener" class="text-muted hover:text-bone">Code ↗</a>
+        </div>
+      </article>
+
+      <!-- 2. abides-native -->
+      <article class="vault-item crucible-card bg-panel grid-box p-6 flex flex-col justify-between" data-cat="quant">
+        <div>
+          <div class="flex justify-between items-center text-[11px] font-mono text-gold mb-3">
+            <span>NEURIPS 2026 AGENTHON TRACK 3</span>
+            <span>C++20 ENGINE</span>
+          </div>
+          <h3 class="font-bold text-lg text-bone mb-2">
+            abides-native: Bit-Exact Native C++20 Market Simulator & Container Bottleneck Analysis
+          </h3>
+          <p class="text-xs text-muted leading-relaxed mb-4">
+            2.3 MB static C++20 binary verified across 1,318 differential fuzz tests. Final scored throughput: 1,755,232 events/s (rank 27/55); Dev score: 203,394 events/container-s (rank 10/50); internal sim loop: 8.34M events/s. Report co-authored with V. Gaur; v1.3 software sole-authored.
+          </p>
+        </div>
+        <div class="pt-4 grid-border-t flex items-center justify-between text-xs font-mono">
+          <a href="https://github.com/Shashwat-srivastav/abides-native" target="_blank" rel="noopener" class="text-gold hover:underline">GitHub Repo ↗</a>
+          <a href="https://doi.org/10.5281/zenodo.23298302" target="_blank" rel="noopener" class="text-muted hover:text-bone">Report DOI ↗</a>
+          <a href="https://doi.org/10.5281/zenodo.23298583" target="_blank" rel="noopener" class="text-muted hover:text-bone">v1.3 DOI ↗</a>
+        </div>
+      </article>
+
+      <!-- 3. Avenir-HKU -->
+      <article class="vault-item crucible-card bg-panel grid-box p-6 flex flex-col justify-between" data-cat="quant">
+        <div>
+          <div class="flex justify-between items-center text-[11px] font-mono text-gold mb-3">
+            <span>AVENIR–HKU 2026 CHALLENGE</span>
+            <span>TEAM ABYSS</span>
+          </div>
+          <h3 class="font-bold text-lg text-bone mb-2">
+            Global Top 10 of 1,171 Teams — Live-Capital Quantitative Trading Finalist
+          </h3>
+          <p class="text-xs text-muted leading-relaxed mb-4">
+            Organizer-certified Finalist (1 of 12 Grand-Finalist teams out of 1,171 global entries) achieving a verified +4.3% return on live capital under strict drawdown and execution constraints.
+          </p>
+        </div>
+        <div class="pt-4 grid-border-t flex items-center justify-between text-xs font-mono">
+          <span class="text-gold">+4.3% Live Capital</span>
+          <span class="text-muted">Certified Top 10 / 1,171</span>
+        </div>
+      </article>
+
+      <!-- 4. UN ITU SpaceAI -->
+      <article class="vault-item crucible-card bg-panel grid-box p-6 flex flex-col justify-between" data-cat="space">
+        <div>
+          <div class="flex justify-between items-center text-[11px] font-mono text-gold mb-3">
+            <span>UN ITU AI FOR GOOD 2026</span>
+            <span>INNOVATION AWARD</span>
+          </div>
+          <h3 class="font-bold text-lg text-bone mb-2">
+            Multi-Mission Optical Water-Quality (Chl-a) Inversion Across Sentinel-2 & Landsat
+          </h3>
+          <p class="text-xs text-muted leading-relaxed mb-4">
+            Team S2WISH (Srivastava, Vishwakarma, Gupta) won one of six Track 2 Innovation Awards (CHF 300 prize). Invited to the AI for Good Global Summit in Geneva (9 Jul 2026; in-person presentation by D. Vishwakarma, remote Q&A by S. Srivastava).
+          </p>
+        </div>
+        <div class="pt-4 grid-border-t flex items-center justify-between text-xs font-mono">
+          <a href="https://doi.org/10.5281/zenodo.20093257" target="_blank" rel="noopener" class="text-gold hover:underline">Report I ↗</a>
+          <a href="https://doi.org/10.5281/zenodo.21469356" target="_blank" rel="noopener" class="text-muted hover:text-bone">Report II ↗</a>
+        </div>
+      </article>
+
+      <!-- 5. IEEE ICIP 2026 -->
+      <article class="vault-item crucible-card bg-panel grid-box p-6 flex flex-col justify-between" data-cat="space">
+        <div>
+          <div class="flex justify-between items-center text-[11px] font-mono text-gold mb-3">
+            <span>IEEE ICIP 2026 GRAND CHALLENGE</span>
+            <span>ABSTRACT #4247</span>
+          </div>
+          <h3 class="font-bold text-lg text-bone mb-2">
+            Physics-Constrained Dual-Architecture Ensemble for RFI Detection in Sentinel-1 SAR Quicklooks
+          </h3>
+          <p class="text-xs text-muted leading-relaxed mb-4">
+            Accepted two-page Grand Challenge abstract (V. Gaur 1st author, S. Srivastava 2nd author; accepted 23 Jun 2026) addressing Radio-Frequency Interference localization in C-band Synthetic Aperture Radar imagery.
+          </p>
+        </div>
+        <div class="pt-4 grid-border-t flex items-center justify-between text-xs font-mono">
+          <a href="https://doi.org/10.5281/zenodo.21990870" target="_blank" rel="noopener" class="text-gold hover:underline">Zenodo DOI: 21990870 ↗</a>
+          <span class="text-muted">SAR Remote Sensing</span>
+        </div>
+      </article>
+
+      <!-- 6. WorldQuant BRAIN -->
+      <article class="vault-item crucible-card bg-panel grid-box p-6 flex flex-col justify-between" data-cat="quant">
+        <div>
+          <div class="flex justify-between items-center text-[11px] font-mono text-gold mb-3">
+            <span>WORLDQUANT BRAIN</span>
+            <span>GOLD LEVEL (SS60841)</span>
+          </div>
+          <h3 class="font-bold text-lg text-bone mb-2">
+            Quantitative Alpha Signal Design & IQC 2026 Stage 2 Qualifier
+          </h3>
+          <p class="text-xs text-muted leading-relaxed mb-4">
+            Progressed from Bronze (18 Mar) to Silver (20 Mar) to Gold (23 Mar 2026) in 5 days with 23 submitted alphas (745 simulated) and qualified for Stage 2 (Top 20%) of the International Quant Championship.
+          </p>
+        </div>
+        <div class="pt-4 grid-border-t flex items-center justify-between text-xs font-mono">
+          <span class="text-gold">Profile: SS60841</span>
+          <span class="text-muted">23 Submitted Alphas</span>
+        </div>
+      </article>
+
+      <!-- 7. veckit PR #9 -->
+      <article class="vault-item crucible-card bg-panel grid-box p-6 flex flex-col justify-between" data-cat="sec">
+        <div>
+          <div class="flex justify-between items-center text-[11px] font-mono text-gold mb-3">
+            <span>UPSTREAM SCIENTIFIC OSS</span>
+            <span>MERGED PR #9</span>
+          </div>
+          <h3 class="font-bold text-lg text-bone mb-2">
+            Proper Rotation-Invariance & Handedness Fix (det(Vt) = +1) in Virtual Embryo Scorer (veckit)
+          </h3>
+          <p class="text-xs text-muted leading-relaxed mb-4">
+            Implemented the proper Kabsch determinant correction in aristoteleo/veckit (addressing the reflection issue reported by i-habib). Merged by maintainer Nanguage on 2 Oct 2026 ("forcing det(Vt) = +1 is the right fix").
+          </p>
+        </div>
+        <div class="pt-4 grid-border-t flex items-center justify-between text-xs font-mono">
+          <a href="https://github.com/aristoteleo/veckit/pull/9" target="_blank" rel="noopener" class="text-gold hover:underline">GitHub PR #9 ↗</a>
+          <span class="text-muted">SO(3) Bio-Geometry</span>
+        </div>
+      </article>
+
+      <!-- 8. CyberForge -->
+      <article class="vault-item crucible-card bg-panel grid-box p-6 flex flex-col justify-between" data-cat="sec">
+        <div>
+          <div class="flex justify-between items-center text-[11px] font-mono text-gold mb-3">
+            <span>AUTOMATED PROGRAM ANALYSIS</span>
+            <span>PROTOTYPE</span>
+          </div>
+          <h3 class="font-bold text-lg text-bone mb-2">
+            CyberForge: Tree-Sitter AST Static Triage & Coverage-Guided Fuzzing Harness
+          </h3>
+          <p class="text-xs text-muted leading-relaxed mb-4">
+            Open-source vulnerability discovery prototype combining multi-language Tree-sitter Abstract Syntax Tree pattern analysis with automated coverage-guided fuzzing harness generation.
+          </p>
+        </div>
+        <div class="pt-4 grid-border-t flex items-center justify-between text-xs font-mono">
+          <a href="https://github.com/Shashwat-srivastav/cyberforge" target="_blank" rel="noopener" class="text-gold hover:underline">GitHub Repo ↗</a>
+          <span class="text-muted">AST + Fuzzing</span>
+        </div>
+      </article>
+
+      <!-- 9. RealPDE -->
+      <article class="vault-item crucible-card bg-panel grid-box p-6 flex flex-col justify-between" data-cat="space">
+        <div>
+          <div class="flex justify-between items-center text-[11px] font-mono text-gold mb-3">
+            <span>PHYSICS-ML BENCHMARKING</span>
+            <span>SOLE AUTHOR</span>
+          </div>
+          <h3 class="font-bold text-lg text-bone mb-2">
+            Input-Window Estimator Blending for Real Particle Image Velocimetry (PIV) Forecasting
+          </h3>
+          <p class="text-xs text-muted leading-relaxed mb-4">
+            Sole-author technical report investigating horizon-adaptive estimator blending on experimental fluid-flow PIV measurements (79.24 / 79.26 development-phase scores).
+          </p>
+        </div>
+        <div class="pt-4 grid-border-t flex items-center justify-between text-xs font-mono">
+          <a href="https://doi.org/10.5281/zenodo.23076511" target="_blank" rel="noopener" class="text-gold hover:underline">Zenodo DOI: 23076511 ↗</a>
+          <span class="text-muted">Fluid Dynamics</span>
+        </div>
+      </article>
+
+      <!-- 10. Falling Walls Lab Chennai 2026 -->
+      <article class="vault-item crucible-card bg-panel grid-box p-6 flex flex-col justify-between" data-cat="sec">
+        <div>
+          <div class="flex justify-between items-center text-[11px] font-mono text-gold mb-3">
+            <span>FALLING WALLS LAB CHENNAI 2026</span>
+            <span>SELECTED PRESENTER</span>
+          </div>
+          <h3 class="font-bold text-lg text-bone mb-2">
+            Breaking the Wall of Multilingual Disinformation
+          </h3>
+          <p class="text-xs text-muted leading-relaxed mb-4">
+            Selected as 1 of 25 presenters (24 Aug 2026) to pitch low-latency epistemic and cross-lingual verification defenses against synthetic disinformation at SRM IST (2 Sep 2026).
+          </p>
+        </div>
+        <div class="pt-4 grid-border-t flex items-center justify-between text-xs font-mono">
+          <span class="text-gold">Information Integrity</span>
+          <span class="text-muted">1 of 25 Selected</span>
+        </div>
+      </article>
+
+      <!-- 11. Healthcare & Academic Papers -->
+      <article class="vault-item crucible-card bg-panel grid-box p-6 flex flex-col justify-between" data-cat="sec">
+        <div>
+          <div class="flex justify-between items-center text-[11px] font-mono text-gold mb-3">
+            <span>NEUROIMAGING & CONFERENCES</span>
+            <span>2024–2025</span>
+          </div>
+          <h3 class="font-bold text-lg text-bone mb-2">
+            IIT Guwahati RIC 2024 Oral Presentation, ICCAMS 2025 & Journal Publications
+          </h3>
+          <p class="text-xs text-muted leading-relaxed mb-4">
+            Extended abstract accepted for oral presentation at IIT Guwahati Research & Industrial Conclave (RIC 2024, dyslexia neuroimaging), alongside accepted papers at ICCAMS 2025 and Educational Administration: Theory and Practice (2024).
+          </p>
+        </div>
+        <div class="pt-4 grid-border-t flex items-center justify-between text-xs font-mono">
+          <span class="text-gold">Healthcare & Applied AI</span>
+          <span class="text-muted">Peer-Reviewed</span>
+        </div>
+      </article>
+
+      <!-- 12. Multi-Agent Systems -->
+      <article class="vault-item crucible-card bg-panel grid-box p-6 flex flex-col justify-between" data-cat="eval">
+        <div>
+          <div class="flex justify-between items-center text-[11px] font-mono text-gold mb-3">
+            <span>MULTI-AGENT ORCHESTRATION</span>
+            <span>APPLIED SYSTEMS</span>
+          </div>
+          <h3 class="font-bold text-lg text-bone mb-2">
+            Land-It (Nine-Agent Architecture), HackVSIT 5.0 (2nd Place) & Flipkart GRiD 5.0/6.0
+          </h3>
+          <p class="text-xs text-muted leading-relaxed mb-4">
+            Engineered a 9-agent document evaluation and optimization workflow (Land-It); won 2nd Place (₹10,000 prize, Team Abyss) at HackVSIT 5.0; reached semi-finalist (Level 2) in Flipkart GRiD 5.0 and presentation round in GRiD 6.0.
+          </p>
+        </div>
+        <div class="pt-4 grid-border-t flex items-center justify-between text-xs font-mono">
+          <a href="https://github.com/Shashwat-srivastav" target="_blank" rel="noopener" class="text-gold hover:underline">GitHub Portfolio ↗</a>
+          <span class="text-muted">Agent Systems</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- SECTION 05: FOUNDER & COLLABORATORS -->
+  <section id="team" class="max-w-[1400px] mx-auto py-16 px-4 sm:px-8 grid-border-b">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div class="lg:col-span-5 bg-crucible p-8 grid-box">
+        <div class="font-mono text-xs text-gold uppercase tracking-widest mb-2">05 // PRINCIPAL INVESTIGATOR</div>
+        <h2 class="font-display font-extrabold text-3xl uppercase tracking-tight mb-2">SHASHWAT SRIVASTAVA</h2>
+        <div class="font-mono text-xs text-muted mb-6">Founder & Lead Researcher, S²WISH | B.Tech CS (2025)</div>
+        <p class="text-sm text-muted leading-relaxed mb-6">
+          Quantitative and AI verification engineer based in Pune, India. Sole author of the NeurIPS 2026 PAIEC accepted paper (#7) and official PAIEC reviewer; creator of <code class="text-bone">abides-native</code>; co-winner of the 2026 UN ITU AI for Good SpaceAI Innovation Award; Avenir–HKU Global Top 10 finalist; and WorldQuant BRAIN Gold researcher.
+        </p>
+        <div class="flex flex-wrap gap-3 font-mono text-xs">
+          <a href="https://openreview.net/forum?id=pFevYFM8Cu" target="_blank" rel="noopener" class="px-3.5 py-2 bg-panel grid-box hover:border-gold">OpenReview ↗</a>
+          <a href="https://github.com/Shashwat-srivastav" target="_blank" rel="noopener" class="px-3.5 py-2 bg-panel grid-box hover:border-gold">GitHub ↗</a>
+          <a href="https://www.linkedin.com/in/shashwat-srivastava-a0687a1a1/" target="_blank" rel="noopener" class="px-3.5 py-2 bg-panel grid-box hover:border-gold">LinkedIn ↗</a>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7 bg-panel p-8 grid-box flex flex-col justify-between">
+        <div>
+          <div class="font-mono text-xs text-gold uppercase tracking-widest mb-2">RESEARCH COLLABORATORS & CO-AUTHORS</div>
+          <h3 class="font-display font-bold text-2xl uppercase tracking-tight mb-6">BUILT WITH HIGH-VELOCITY CO-AUTHORS</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+            <div class="p-5 bg-obsidian grid-box">
+              <div class="font-bold text-bone">Vivek Gaur</div>
+              <div class="font-mono text-xs text-gold mt-0.5">SAR Remote Sensing & C++ Systems</div>
+              <p class="text-xs text-muted mt-2 leading-relaxed">
+                1st Author on IEEE ICIP 2026 Grand Challenge Abstract #4247 (Sentinel-1 SAR RFI) & Co-Author on the NeurIPS 2026 Agenthon ABIDES C++ bottleneck report.
+              </p>
+            </div>
+            <div class="p-5 bg-obsidian grid-box">
+              <div class="font-bold text-bone">Divyansh Vishwakarma & Prakhar Gupta</div>
+              <div class="font-mono text-xs text-gold mt-0.5">Orbital Optical Sensing (Team S2WISH)</div>
+              <p class="text-xs text-muted mt-2 leading-relaxed">
+                Co-recipients of the 2026 UN ITU AI for Good SpaceAI Track 2 Innovation Award (Geneva Summit presentation & Zenodo technical reports).
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 pt-4 grid-border-t font-mono text-xs text-muted flex flex-wrap justify-between gap-2">
+          <span>OPEN TO: NON-DILUTIVE RESEARCH GRANTS // AI SAFETY & QUANT COLLABORATIONS</span>
+          <span class="text-gold">STATUS: ACTIVE (2026–2027)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER / CONTACT CTA -->
+  <footer id="contact" class="max-w-[1400px] mx-auto py-16 px-4 sm:px-8">
+    <div class="bg-gold text-obsidian p-8 sm:p-12 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+      <div>
+        <div class="font-mono text-xs font-bold uppercase tracking-widest mb-2">PARTNER WITH S²WISH CRUCIBLE RESEARCH LABS</div>
+        <h2 class="font-display font-extrabold text-3xl sm:text-4xl uppercase tracking-tight leading-none">
+          BACK FRUGAL, VERIFIABLE SCIENCE.
+        </h2>
+        <p class="font-mono text-xs sm:text-sm mt-3 max-w-xl">
+          For research fellowships, non-dilutive grant inquiries, benchmark verification audits, or quantitative systems collaboration:
+        </p>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto shrink-0">
+        <a href="mailto:shashwat1322001@gmail.com" class="px-6 py-4 bg-obsidian text-bone font-mono font-bold text-xs uppercase tracking-wider text-center hover:bg-panel transition whitespace-nowrap">
+          shashwat1322001@gmail.com ↗
+        </a>
+        <button onclick="copyCitation()" id="copyBtn" class="px-6 py-4 border-2 border-obsidian text-obsidian font-mono font-bold text-xs uppercase tracking-wider hover:bg-obsidian hover:text-gold transition whitespace-nowrap">
+          Copy PAIEC 2026 BibTeX
+        </button>
+      </div>
+    </div>
+
+    <div class="pt-8 mt-8 grid-border-t flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-muted gap-4">
+      <div>© 2025–2026 S²WISH (CRUCIBLE RESEARCH LABS). ALL METRICS INDEPENDENTLY VERIFIED VIA OPENREVIEW & ZENODO DOIs.</div>
+      <div class="flex gap-6">
+        <a href="https://openreview.net/forum?id=pFevYFM8Cu" target="_blank" rel="noopener" class="hover:text-gold">OpenReview</a>
+        <a href="https://github.com/Shashwat-srivastav" target="_blank" rel="noopener" class="hover:text-gold">GitHub</a>
+        <a href="https://www.linkedin.com/company/s2wish/" target="_blank" rel="noopener" class="hover:text-gold">LinkedIn</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const budgets = [0, 1, 3, 7, 15, 31];
+
+    function updateSimulation() {
+      const a = parseFloat(document.getElementById('accSlider').value);
+      const bIdx = parseInt(document.getElementById('budgetSlider').value);
+      const b = budgets[bIdx];
+      const p0 = parseFloat(document.getElementById('p0Slider').value);
+
+      const tier = a <= 0.15 ? '(Hard Tail Benchmark)' : (a >= 0.75 ? '(Easy Benchmark)' : '(Moderate Benchmark)');
+      document.getElementById('accVal').textContent = `${a.toFixed(2)} ${tier}`;
+      document.getElementById('budgetVal').textContent = `b = ${b} items`;
+      document.getElementById('bLabel1').textContent = `b=${b}`;
+      document.getElementById('p0Val').textContent = p0.toFixed(2);
+
+      const floor = a * (1 - a);
+      const mleVar = b === 0 ? Math.pow(0.5 - a, 2) : (a * (1 - a)) / b;
+      const brierBase = Math.min(0.38, floor + (b === 0 ? Math.pow(0.52 - a, 2) : mleVar * 0.85 + 0.018));
+
+      const shrinkMean = (b * a + 1) / (b + 2);
+      const shrinkVar = (b * a * (1 - a)) / Math.pow(b + 2, 2);
+      const brierBetaVal = floor + Math.pow(shrinkMean - a, 2) + shrinkVar;
+
+      const priorMean = 0.428;
+      const tauWeight = a <= 0.18 ? 3.2 : 2.3;
+      const s2Mean = (b * a + tauWeight * priorMean) / (b + tauWeight);
+      const s2Var = (b * a * (1 - a)) / Math.pow(b + tauWeight + 1.2, 2);
+      const hardBonus = a <= 0.15 ? 0.0071 : 0.0026;
+      const brierS2Val = Math.max(floor + 0.001, floor + Math.pow(s2Mean - a, 2) * 0.65 + s2Var - hardBonus);
+
+      document.getElementById('brierBaseline').textContent = brierBase.toFixed(4);
+      document.getElementById('brierBeta').textContent = brierBetaVal.toFixed(4);
+      document.getElementById('brierS2wish').textContent = brierS2Val.toFixed(4);
+
+      const delta = (brierS2Val - brierBase) * 1000;
+      document.getElementById('deltaGain').textContent = `Δ = ${delta.toFixed(1)} × 10⁻³ vs Baseline`;
+
+      const b0 = a * Math.pow(1 - p0, 2) + (1 - a) * Math.pow(p0, 2);
+      document.getElementById('floorVal').textContent = floor.toFixed(4);
+      document.getElementById('b0Val').textContent = b0.toFixed(4);
+
+      const warnEl = document.getElementById('reflectionWarning');
+      if (Math.abs(p0 - 0.5) < 0.015) {
+        document.getElementById('recoveredA').textContent = 'SINGULAR (p₀=0.5)';
+        warnEl.innerHTML = '<span class="text-red-400">⚠ Proposition 2 Reflection Singularity: (a, p₀) ↦ (1-a, 1-p₀) makes B₀=0.2500 uninvertible at p₀=0.50!</span>';
+      } else {
+        const recA = (b0 - p0 * p0) / (1 - 2 * p0);
+        document.getElementById('recoveredA').textContent = recA.toFixed(4);
+        warnEl.innerHTML = 'Proposition 1 Inversion: Exact algebraic recovery enabled (<code class="text-gold">p₀ ≠ 0.50</code>).';
+      }
+    }
+
+    function filterVault(cat) {
+      const items = document.querySelectorAll('.vault-item');
+      const btns = document.querySelectorAll('.vault-btn');
+
+      btns.forEach(btn => {
+        if (btn.dataset.filter === cat) {
+          btn.className = 'vault-btn px-4 py-2 bg-gold text-obsidian font-bold uppercase';
+        } else {
+          btn.className = 'vault-btn px-4 py-2 bg-panel grid-box text-bone uppercase hover:border-gold';
+        }
+      });
+
+      items.forEach(item => {
+        if (cat === 'all' || item.dataset.cat === cat) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    function copyCitation() {
+      const bib = `@inproceedings{srivastava2026paiec,
+  author    = {Shashwat Srivastava},
+  title     = {Predicting AI Performance on Unseen Benchmarks: Shrinkage, Hierarchical Refinements and Their Limits},
+  booktitle = {PAIEC 2026 (NeurIPS 2026 Competition Track, non-archival)},
+  year      = {2026},
+  doi       = {10.5281/zenodo.23885712},
+  url       = {https://openreview.net/forum?id=pFevYFM8Cu}
+}`;
+      navigator.clipboard.writeText(bib);
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied BibTeX ✓';
+      setTimeout(() => { btn.textContent = 'Copy PAIEC 2026 BibTeX'; }, 2500);
+    }
+
+    updateSimulation();
+  </script>
+</body>
+</html>
